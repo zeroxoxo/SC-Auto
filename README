@@ -1,0 +1,16 @@
+The sole purpose of this script is to automate soundcloud promotion, without penalties for using bots.
+Here's how it works:
+1. Pick popular user with similar music style of yours.
+2. Put his id into "reference_user_id" variable.
+3. Find out (idk how, but do it anyway) access_token of your account in any working app that uses soundcloud API.
+4. Put it as string to "token" variable.
+5. Use script once a day.
+
+What's the script does:
+Follow users followed to reference user and unfollow users that didn't followed you in some time after you followed them.
+Users unfollowed by script won't be followed by script again to get rid of cycles of following/unfollowing the same user.
+Users you follow also get like and positive comment on last posted audio, to get their attention to your profile.
+
+This method isn't the fastest method, but it faster than waiting for random users to find your profile and hope that some of them would follow you on their own.
+
+I've got around 1000 followers in a year using this method, even though the music i make isn't of popular genre at all.
