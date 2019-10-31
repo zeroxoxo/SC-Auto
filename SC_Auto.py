@@ -3,7 +3,7 @@
 import soundcloud as sc
 import random
 
-
+reference_user_id = 1
 token = 'access_token'
 client_xeno = sc.Client(access_token=token)
 me = client_xeno.get('me')
@@ -171,7 +171,7 @@ with open('f.txt', 'w+') as fw:
             fw.write('c sample text')
             print('Done')
     elif f == 'f':
-        sc_followFollowers(426079)
+        sc_followFollowers(reference_user_id)
 
         if mfc >= 1900:
             fw.write('c sample text')
