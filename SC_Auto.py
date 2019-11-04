@@ -5,8 +5,8 @@ import random
 
 reference_user_id = 1
 token = 'access_token'
-client_xeno = sc.Client(access_token=token)
-me = client_xeno.get('me')
+client = sc.Client(access_token=token)
+me = client.get('me')
 
 comments = ['ayyyyyyyy', 'nice one :)', 'awesomeeee', 'incredible work dude', 'woah!!!', 'toooo fkn awesome',
             'luv it!', 'awesome!!', 'daaayum', ';D', 'dope one', 'amzng', 'aye', 'soo niiice', 'so good',
@@ -34,11 +34,11 @@ add = open('reject.txt', mode='a')
 def sc_iFollow() -> list:
     "Get the list of user ids, that I follow."
 
-    i_follow = client_xeno.get('/me/followings/', linked_partitioning=1, limit=200, order='id')
+    i_follow = client.get('/me/followings/', linked_partitioning=1, limit=200, order='id')
     out = [f.id for f in i_follow.collection]
 
     while i_follow.next_href != None:
-        i_follow = client_xeno.get(i_follow.next_href, linked_partitioning=1, limit=200, order='id')
+        i_follow = client.get(i_follow.next_href, linked_partitioning=1, limit=200, order='id')
         out += [f.id for f in i_follow.collection]
 
     return out
@@ -47,11 +47,11 @@ def sc_iFollow() -> list:
 def sc_myFollowers() -> list:
     "Get the list of user ids, that follow me."
 
-    my_follow = client_xeno.get('/me/followers/', linked_partitioning=1, limit=200, order='id')
+    my_follow = client.get('/me/followers/', linked_partitioning=1, limit=200, order='id')
     out = [f.id for f in my_follow.collection]
 
     while my_follow.next_href != None:
-        my_follow = client_xeno.get(my_follow.next_href, linked_partitioning=1, limit=200, order='id')
+        my_follow = client.get(my_follow.next_href, linked_partitioning=1, limit=200, order='id')
         out += [f.id for f in my_follow.collection]
 
     return out
@@ -59,11 +59,11 @@ def sc_myFollowers() -> list:
 
 def sc_iLike() -> list:
     "Get the list of user ids, that I like."
-    i_like = client_xeno.get('/me/favorites/', linked_partitioning=1, limit=200, order='id')
+    i_like = client.get('/me/favorites/', linked_partitioning=1, limit=200, order='id')
     out = [f.id for f in i_like.collection]
     try:
         while i_like.next_href != None:
-            i_like = client_xeno.get(i_like.next_href, linked_partitioning=1, limit=200, order='id')
+            i_like = client.get(i_like.next_href, linked_partitioning=1, limit=200, order='id')
             out += [f.id for f in i_like.collection]
     except AttributeError:
         pass
@@ -73,7 +73,7 @@ def sc_iLike() -> list:
 def sc_Like(id: int):
     "Add track in favorites, by track id."
     try:
-        client_xeno.put('/me/favorites/' + str(id))
+        client.put('/me/favorites/' + str(id))
     except Exception as e:
         print(e)
 
@@ -81,9 +81,9 @@ def sc_Like(id: int):
 def sc_postComment(id: int):
     "Post random comment on track, by track id."
     try:
-        x = client_xeno.get('/tracks/{id}/'.format(id)).duration
+        x = client.get('/tracks/{id}/'.format(id)).duration
         if int(me.id) != int(id):
-            client_xeno.post('/tracks/{id}/comments'.format(id), comment={
+            client.post('/tracks/{id}/comments'.format(id), comment={
                 'body': comments.pop(random.choice(comments)),
                 'timestamp': x/random.randint(2, 10)
             })
@@ -94,7 +94,7 @@ def sc_postComment(id: int):
 def sc_Follow(id: int):
     "Follow user, by user id."
     try:
-        client_xeno.put('/me/followings/{id}'.format(id))
+        client.put('/me/followings/{id}'.format(id))
     except Exception as e:
         print(e)
 
@@ -102,7 +102,7 @@ def sc_Follow(id: int):
 def sc_Unfollow(id: int):
     "Unfollow user, by user id."
     try:
-        client_xeno.delete('/me/followings/{id}'.format(id))
+        client.delete('/me/followings/{id}'.format(id))
         add.write(str(id) + ' ')
     except Exception as e:
         print(e)
@@ -112,15 +112,15 @@ def sc_followFollowers(id: int):
     "Follow users that follow some other person if they have enough followings as well, until count is not reached."
     print('Following...')
     i_f, count, reject_count, x, j = sc_iFollow(), 40 + random.randint(0,10), 120, 0, []
-    new_follow = client_xeno.get(f'/users/{id}/followers/', limit=1, linked_partitioning=1)
+    new_follow = client.get(f'/users/{id}/followers/', limit=1, linked_partitioning=1)
     next_href = new_follow.next_href
-    new_follow_next = client_xeno.get(next_href, limit=200, linked_partitioning=1)
+    new_follow_next = client.get(next_href, limit=200, linked_partitioning=1)
     while new_follow_next.next_href != None:
         next_href = new_follow_next.next_href
         for i in new_follow_next.collection:
             if (((i.id not in i_f) and (x < count)) and ((i.id not in j) and (i.followers_count >= reject_count))) and (i.id not in reject):
                 try:
-                    t = client_xeno.get(f'/users/{i.id}/tracks/')[0].id
+                    t = client.get(f'/users/{i.id}/tracks/')[0].id
                     sc_Like(t)
                     sc_postComment(t)
                 except:
@@ -133,7 +133,7 @@ def sc_followFollowers(id: int):
                 print('Following done.')
                 return
         del new_follow_next
-        new_follow_next = client_xeno.get(next_href, limit=200, linked_partitioning=1)
+        new_follow_next = client.get(next_href, limit=200, linked_partitioning=1)
 
 
 def sc_cleanFollowers():
@@ -143,7 +143,7 @@ def sc_cleanFollowers():
     followings = sc_iFollow()
     low_edge, high_edge, unfollow_rate = 130, 9000, 50
     for n, i in enumerate(followings):
-        user = client_xeno.get(f'/users/{i}')
+        user = client.get(f'/users/{i}')
         print('Checking ' + user.username)
         if (i not in followers and user.followers_count < high_edge) or (user.followers_count < low_edge):
             if n < unfollow_rate:
@@ -160,7 +160,7 @@ with open('f.txt', 'r') as flag:
 
 
 with open('f.txt', 'w+') as fw:
-    mfc = client_xeno.get('me').followings_count
+    mfc = me.followings_count
     if f == 'c':
         sc_cleanFollowers()
 
