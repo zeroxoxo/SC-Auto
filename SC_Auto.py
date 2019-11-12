@@ -36,10 +36,9 @@ def main_func():
     with open('f.txt', 'r') as fr:
         f = fr.read(1)
     with open('f.txt', 'w+') as fw:
-        mfc = client_xeno.get('me').followings_count
+        mfc = me.followings_count
         if f == 'c':
             sc_cleanFollowers()
-
             if mfc <= 1700:
                 fw.write('f sample text')
                 print('Done')
@@ -47,8 +46,7 @@ def main_func():
                 fw.write('c sample text')
                 print('Done')
         elif f == 'f':
-            sc_followFollowers(426079)
-
+            sc_followFollowers(reference_user_id)
             if mfc >= 1900:
                 fw.write('c sample text')
                 print('Done')
@@ -57,7 +55,7 @@ def main_func():
                 print('Done')
         else:
             fw.write('f sample text')
-            print('Something get wrong...', f"\nF = {f}")
+            print('Something got wrong...', f"\nF = {f}")
             
 
 def sc_iFollow() -> list:
@@ -184,6 +182,6 @@ def sc_cleanFollowers():
     print('Adjust edges.')
 
 if __name__ == __main__:
-    main_fumc()
+    main_func()
 
 add.close()
