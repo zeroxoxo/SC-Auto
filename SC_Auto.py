@@ -28,8 +28,37 @@ comments = ['ayyyyyyyy', 'nice one :)', 'awesomeeee', 'incredible work dude', 'w
 with open('reject.txt', mode='r') as read:
     reject = list(map(int, read.read().split()))
 
-
 add = open('reject.txt', mode='a')
+
+
+def main_func():
+    "Either start following or unfollowing process, depending on the flag value."
+    with open('f.txt', 'r') as fr:
+        f = fr.read(1)
+    with open('f.txt', 'w+') as fw:
+        mfc = client_xeno.get('me').followings_count
+        if f == 'c':
+            sc_cleanFollowers()
+
+            if mfc <= 1700:
+                fw.write('f sample text')
+                print('Done')
+            else:
+                fw.write('c sample text')
+                print('Done')
+        elif f == 'f':
+            sc_followFollowers(426079)
+
+            if mfc >= 1900:
+                fw.write('c sample text')
+                print('Done')
+            else:
+                fw.write('f sample text')
+                print('Done')
+        else:
+            fw.write('f sample text')
+            print('Something get wrong...', f"\nF = {f}")
+            
 
 def sc_iFollow() -> list:
     "Get the list of user ids, that I follow."
@@ -154,34 +183,7 @@ def sc_cleanFollowers():
                 return
     print('Adjust edges.')
 
-
-with open('f.txt', 'r') as flag:
-    f = flag.read(1)
-
-
-with open('f.txt', 'w+') as fw:
-    mfc = me.followings_count
-    if f == 'c':
-        sc_cleanFollowers()
-
-        if mfc <= 1700:
-            fw.write('f sample text')
-            print('Done')
-        else:
-            fw.write('c sample text')
-            print('Done')
-    elif f == 'f':
-        sc_followFollowers(reference_user_id)
-
-        if mfc >= 1900:
-            fw.write('c sample text')
-            print('Done')
-        else:
-            fw.write('f sample text')
-            print('Done')
-    else:
-        fw.write('c sample text')
-        print('Something get wrong...')
-
+if __name__ == __main__:
+    main_fumc()
 
 add.close()
