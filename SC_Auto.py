@@ -181,7 +181,7 @@ def sc_cleanFollowers():
                 return
     print('Adjust edges.')
 
-if __name__ == __main__:
+if __name__ == '__main__':
     main_func()
 
 add.close()
