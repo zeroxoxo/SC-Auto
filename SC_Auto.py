@@ -3,27 +3,14 @@
 import soundcloud as sc
 import random
 
+# Id of user which followers you would follow
 reference_user_id = 1
 token = 'access_token'
 client = sc.Client(access_token=token)
 me = client.get('me')
 
-comments = ['ayyyyyyyy', 'nice one :)', 'awesomeeee', 'incredible work dude', 'woah!!!', 'toooo fkn awesome',
-            'luv it!', 'awesome!!', 'daaayum', ';D', 'dope one', 'amzng', 'aye', 'soo niiice', 'so good',
-            'XDDDDDDDDD', 'dope af', 'nice one', 'XD', 'omfg', 'wow', 'awesomeeee', 'dope', 'incredible',
-            '!!!!', '^^', 'WHATTA HELL', 'wooohooooooo', ':DD', 'darn wicked!!!', 'dooope tuuuune!!!!', '=D',
-            'outstanding', 'remarkable', 'good work', 'really good!', 'oh man!!', 'yeah!', 'yesh', 'so awesome',
-            'dig it', 'smooooth', 'cooool', 'dope', 'sweeet', 'awsm', 'woaaahhhh', 'soo gooood', '<3', 'super hyped',
-            'great one', 'yesss', 'next level!!!', 'sick one',  'dope az hell', 'banger!!', 'great work',
-            'XD', 'niceee', 'daaayum this is fkn sick man', 'hell yesss', 'dope shit',  'this is pretty sickk',
-            'crazy sickkkk', 'this is fkn insane', 'great stuff', 'fresh', 'you rule bro', 'killing it!!', 'omfg!!',
-            'fuck yes!!!','fuck yes!!!', 'cool', 'original', 'soooo preeettyyy', 'that is it', 'dat fx'
-            'oh, lord', 'amazing, love it', 'epic', 'smoooth', 'oh gosh...', 'loving it', 'niceee', 'awesomeee',
-            'great fx', 'wonderful fx', 'top tier sfx', 'nice rhythms', 'quite intence', 'astonishing', 'dat fx though',
-            'god damn', 'stunningly', 'breathtakingly', 'rattling', 'real moving stuff', 'quite impressive',
-            'lovely', 'top grade', 'top brand', 'pure adoration', 'cool atmo', 'huuuge', 'awsm',
-            'aww yess', 'sic1', 'geeenius!!!', 'really vivid', 'paints a pic']
-
+# Here you put comments you'd like to put on tracks while following
+comments = []
 
 with open('reject.txt', mode='r') as read:
     reject = list(map(int, read.read().split()))
@@ -169,12 +156,14 @@ def sc_cleanFollowers():
     followers = sc_myFollowers()
     followings = sc_iFollow()
     low_edge, high_edge, unfollow_rate = 130, 9000, 50
-    for n, i in enumerate(followings):
+    n = 0
+    for i in followings:
         user = client.get(f'/users/{i}')
         print('Checking ' + user.username)
         if (i not in followers and user.followers_count < high_edge) or (user.followers_count < low_edge):
             if n < unfollow_rate:
                 sc_Unfollow(i)
+                n += 1
                 print('Unfollowed ' + user.username)
             else:
                 print('Unfollowing done.')
